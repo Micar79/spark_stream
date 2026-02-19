@@ -1,0 +1,11 @@
+app_name: RealTimeFraudDetection
+
+kafka:
+  bootstrap_servers: localhost:9092
+  input_topic: transactions
+  alert_topic: fraud_alerts
+
+paths:
+  silver_delta: /data/delta/silver/transactions
+  metrics_output: /data/warehouse/user_metrics
+  checkpoints: /tmp/checkpoints
