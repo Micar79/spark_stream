@@ -1,7 +1,15 @@
+"""Spark session initialization module."""
 from pyspark.sql import SparkSession
 
 def create_spark_session(app_name: str):
-
+    """Create and configure a Spark session for streaming.
+    
+    Args:
+        app_name: Name of the Spark application
+        
+    Returns:
+        Configured SparkSession instance
+    """
     spark = (
         SparkSession.builder
         .appName(app_name)

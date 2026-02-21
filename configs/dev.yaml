@@ -1,10 +1,13 @@
+# Real-time Fraud Detection Application Configuration
 app_name: RealTimeFraudDetection
 
+# Kafka connection settings
 kafka:
-  bootstrap_servers: localhost:9092
+  bootstrap_servers: kafka:29092  # Use Docker service name for container communication
   input_topic: transactions
   alert_topic: fraud_alerts
 
+# Data paths for Delta Lake and checkpoints
 paths:
   silver_delta: /data/delta/silver/transactions
   metrics_output: /data/warehouse/user_metrics

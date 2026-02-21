@@ -1,28 +1,30 @@
+# Use a base Python image
 FROM python:3.10-slim
 
+# Install Java, a prerequisite for Spark
+RUN apt-get update && \
+    apt-get install -y openjdk-17-jdk && \
+    rm -rf /var/lib/apt/lists/*
 
-# Prevent interactive prompts
-ENV DEBIAN_FRONTEND=noninteractive
+# Set environment variables for Spark
+ENV SPARK_HOME="/opt/spark"
+ENV PATH="$SPARK_HOME/bin:$SPARK_HOME/sbin:$PATH"
+ENV PYSPARK_PYTHON=python3
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        openjdk-17-jdk \
-        curl \
-        ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+# Download and unpack Spark
+WORKDIR $SPARK_HOME
+RUN curl -fsSL https://archive.apache.org/dist/spark/spark-3.4.1/spark-3.4.1-bin-hadoop3.tgz -o spark.tgz && \
+    tar xzf spark.tgz --strip-components 1 && \
+    rm spark.tgz
 
-# Set JAVA_HOME
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-ENV PATH=$PATH:$JAVA_HOME/bin
+# Install the PySpark library via pip
+RUN pip install pyspark==3.4.1
 
-# Install PySpark
-RUN pip install --no-cache-dir pyspark==3.5.0 delta-spark pyyaml
-
-# Set working directory
+# Set the working directory for your application
 WORKDIR /app
 
-# Copy project files
-COPY . .
+# Optional: Copy your application code into the container
+# COPY . .
 
 # Run the application
 CMD ["python", "app/main.py"]
